@@ -11,6 +11,7 @@ const base = {
 
 export default function calculateCashout(input, total, float){
 
+
     let difference = Number(total - float); // Need to get this to zero
     let cashout = Object.assign({}, base);             // This is what needs to be taken out
     let register = Object.assign({}, input);            // This is what needs to be left in

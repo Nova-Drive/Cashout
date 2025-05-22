@@ -1,6 +1,6 @@
 import TableItem from "./TableItem";
 
-export default function Table({ children, input, register, cashout }) {
+export default function Table({ input, register, cashout }) {
   let sum = (obj) => Object.values(obj).reduce((a, b) => a + b, 0);
   return (
     <table className="w-min py-4 table-auto bg-teal-600 rounded-2xl border-4 border-black border-separate border-spacing-0">
