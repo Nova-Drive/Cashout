@@ -7,7 +7,7 @@ import Input from "./Input";
 export const RegisterContext = createContext(null);
 export const RegisterDispachContext = createContext(null);
 
-export function RegisterProvider({ children }) {
+export function RegisterProvider() {
   const [registers, dispach] = useReducer(registerReducer, initialRegisters);
 
   function addRegister() {
@@ -28,13 +28,18 @@ export function RegisterProvider({ children }) {
     });
   }
 
+  function deleteRegister(registerId) {
+    dispach({ type: "deleted", id: registerId });
+  }
+
   function registerReducer(registers, action) {
     switch (action.type) {
       case "added": {
         return [...registers, action.register];
       }
       case "deleted": {
-        return 0;
+        console.log("Deleted Case: Delete " + action.id);
+        return registers.filter((r) => r.id != action.id);
       }
       default: {
         throw new Error("Unsupported");
@@ -51,7 +56,7 @@ export function RegisterProvider({ children }) {
             <Register register={register} order={index + 1} />
           ))}
           <div className="flex mt-3 space-x-1">
-            <InputButton>Add Register</InputButton>
+            <InputButton action={addRegister}>Add Register</InputButton>
             <InputButton>Calculate</InputButton>
             <InputButton>Reset</InputButton>
           </div>

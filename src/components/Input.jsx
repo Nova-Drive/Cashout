@@ -1,4 +1,3 @@
-import { useRef } from "react";
 import InputButton from "./InputAddSubButton";
 
 export default function Input({ children, amount, handleInput, actions }) {

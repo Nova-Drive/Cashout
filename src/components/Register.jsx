@@ -1,10 +1,14 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import Float from "./Float";
 import Input from "./Input";
 import Header from "./Header";
 import InputButton from "./InputAddSubButton";
+import { RegisterContext, RegisterDispachContext } from "./CashoutContext";
 
-export default function Register({ register, order }) {
+export default function Register({ order }) {
+  const registerContext = useContext(RegisterContext);
+  const register = registerContext[order - 1];
+  const dispach = useContext(RegisterDispachContext);
   const [input, setInput] = useState({
     quarter: Number(0),
     loonie: Number(0),
@@ -184,12 +188,20 @@ export default function Register({ register, order }) {
 
       <div className="flex justify-evenly items-center">
         <Float amount={float} setAmount={handleSetFloat} />
-        <InputButton
-          style="flex justify-center h-min mt-2"
-          onClick={handleReset}
-        >
-          Reset
-        </InputButton>
+        <div className="flex space-x-10">
+          <InputButton
+            style="flex justify-center h-min mt-2"
+            action={handleReset}
+          >
+            Reset
+          </InputButton>
+          <InputButton
+            style="flex justify-center h-min mt-2 hover:bg-red-500"
+            action={() => dispach({ type: "deleted", id: register.id })}
+          >
+            Delete
+          </InputButton>
+        </div>
       </div>
     </div>
   );
