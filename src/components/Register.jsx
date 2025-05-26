@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import Float from "./Float";
 import Input from "./Input";
 import Header from "./Header";
@@ -9,7 +9,6 @@ export default function Register({ order }) {
   const registerContext = useContext(RegisterContext);
   const register = registerContext[order];
   const dispach = useContext(RegisterDispachContext);
-  const [float, setFloat] = useState(0);
 
   const incrementDecrement = {
     increment: (type) =>
@@ -37,7 +36,11 @@ export default function Register({ order }) {
   }
 
   function handleSetFloat(amount) {
-    setFloat(Number(amount));
+    dispach({
+      type: "setFloat",
+      index: order,
+      float: amount,
+    });
   }
 
   function handleReset() {
@@ -45,7 +48,6 @@ export default function Register({ order }) {
       type: "resetRegister",
       index: order,
     });
-    setFloat(0);
   }
 
   return (
@@ -53,56 +55,56 @@ export default function Register({ order }) {
       <Header>Register {order + 1}</Header>
       <div className="grid grid-cols-2 w-2xl justify-items-center auto-cols-max">
         <Input
-          amount={register.quarter}
+          amount={register.cash.quarter}
           handleInput={handleSetInput}
           actions={incrementDecrement}
         >
           0.25
         </Input>
         <Input
-          amount={register.loonie}
+          amount={register.cash.loonie}
           handleInput={handleSetInput}
           actions={incrementDecrement}
         >
           1
         </Input>
         <Input
-          amount={register.toonie}
+          amount={register.cash.toonie}
           handleInput={handleSetInput}
           actions={incrementDecrement}
         >
           2
         </Input>
         <Input
-          amount={register.five}
+          amount={register.cash.five}
           handleInput={handleSetInput}
           actions={incrementDecrement}
         >
           5
         </Input>
         <Input
-          amount={register.ten}
+          amount={register.cash.ten}
           handleInput={handleSetInput}
           actions={incrementDecrement}
         >
           10
         </Input>
         <Input
-          amount={register.twenty}
+          amount={register.cash.twenty}
           handleInput={handleSetInput}
           actions={incrementDecrement}
         >
           20
         </Input>
         <Input
-          amount={register.fifty}
+          amount={register.cash.fifty}
           handleInput={handleSetInput}
           actions={incrementDecrement}
         >
           50
         </Input>
         <Input
-          amount={register.hundred}
+          amount={register.cash.hundred}
           handleInput={handleSetInput}
           actions={incrementDecrement}
         >
@@ -111,7 +113,7 @@ export default function Register({ order }) {
       </div>
 
       <div className="flex justify-evenly items-center">
-        <Float amount={float} setAmount={handleSetFloat} />
+        <Float amount={register.float} setAmount={handleSetFloat} />
         <div className="flex space-x-10">
           <InputButton
             style="flex justify-center h-min mt-2"

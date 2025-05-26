@@ -9,7 +9,10 @@ const base = {
     hundred: Number(0),
   };
 
-export default function calculateCashout(input, total, float){
+export default function calculateCashout(input, total = null, float){
+    let sum = (obj) => Object.values(obj).reduce((a, b) => a + b, 0);
+
+    total = total ? total : sum(input);
 
 
     let difference = Number(total - float); // Need to get this to zero
@@ -79,9 +82,9 @@ export default function calculateCashout(input, total, float){
         
     }
 
-    console.log(cashout.fifty);
+    //console.log(cashout.fifty);
 
 
     //return an object with two object: what should be in till and what should be out of till
-    return {register: register, cashout:cashout, difference: difference};
+    return {register: register, cashout:cashout, inputTotal: total, cashoutTotal: sum(cashout)};
 }

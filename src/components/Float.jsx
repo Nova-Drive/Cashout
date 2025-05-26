@@ -1,7 +1,7 @@
 export default function Float({ amount, setAmount }) {
   return (
     <div className="p-2 border-2 w-min border-black rounded-xl flex justify-center">
-      <div className="h-15 justify-items-center">Float</div>
+      <p className="align-middle">Float</p>
       <button
         className="p-1 mx-3 border-2 border-black rounded"
         onClick={() => {
