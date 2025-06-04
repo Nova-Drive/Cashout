@@ -1,83 +1,174 @@
+import { Children } from "react";
 import TableItem from "./TableItem";
 
-export default function Table({ input, register, cashout }) {
+/**
+ * input and register must not be null if isRegister is true. If isRegister is false, they may be null. cashout must always be given.
+ *
+ */
+export default function Table({
+  input,
+  register,
+  cashout,
+  isRegister = true,
+  children,
+}) {
   let sum = (obj) => Object.values(obj).reduce((a, b) => a + b, 0);
+
+  if ((isRegister && !register) || (isRegister && !input)) {
+    throw new Error(
+      "Table error: isRegister == true and register and/or input was not provided. Please make sure both are provided, or set isRegister to false."
+    );
+  }
   return (
-    <table className="w-min py-4 table-auto bg-teal-600 rounded-2xl border-4 border-black border-separate border-spacing-0">
-      <thead className="">
-        <tr className="w-max text-sm  text-gray-500 dark:text-gray-400">
-          <th scope="col" className="pl-1">
-            Denomination
-          </th>
-          <th scope="col" className="px-5">
-            Total
-          </th>
-          <th scope="col" className="px-5">
-            In Register
-          </th>
-          <th scope="col" className="pl-1">
-            Out of Register
-          </th>
-        </tr>
-      </thead>
-      <tbody className="text-center">
-        <tr>
-          <TableItem type={"head"}>$0.25</TableItem>
-          <TableItem>${input.quarter}</TableItem>
-          <TableItem>${register.quarter}</TableItem>
-          <TableItem>${cashout.quarter}</TableItem>
-        </tr>
-        <tr>
-          <TableItem type={"head"}>$1</TableItem>
-          <TableItem>${input.loonie}</TableItem>
-          <TableItem>${register.loonie}</TableItem>
-          <TableItem>${cashout.loonie}</TableItem>
-        </tr>
-        <tr>
-          <th>$2</th>
-          <td>${input.toonie}</td>
-          <td>${register.toonie}</td>
-          <td>${cashout.toonie}</td>
-        </tr>
-        <tr>
-          <th>$5</th>
-          <td>${input.five}</td>
-          <td>${register.five}</td>
-          <td>${cashout.five}</td>
-        </tr>
-        <tr>
-          <th>$10</th>
-          <td>${input.ten}</td>
-          <td>${register.ten}</td>
-          <td>${cashout.ten}</td>
-        </tr>
-        <tr>
-          <th>$20</th>
-          <td>${input.twenty}</td>
-          <td>${register.twenty}</td>
-          <td>${cashout.twenty}</td>
-        </tr>
-        <tr>
-          <th>$50</th>
-          <td>${input.fifty}</td>
-          <td>${register.fifty}</td>
-          <td>${cashout.fifty}</td>
-        </tr>
-        <tr>
-          <th>$100</th>
-          <td>${input.hundred}</td>
-          <td>${register.hundred}</td>
-          <td>${cashout.hundred}</td>
-        </tr>
-      </tbody>
-      <tfoot className="text-center">
-        <tr>
-          <th className="border-t border-gray-700">Total</th>
-          <td className="border-t border-gray-700">${sum(input)}</td>
-          <td className="border-t border-gray-700">${sum(register)}</td>
-          <td className="border-t border-gray-700">${sum(cashout)}</td>
-        </tr>
-      </tfoot>
-    </table>
+    <div className="w-min h-min p-4 bg-teal-600 rounded-2xl border-4 border-black border-separate border-spacing-0">
+      <h1 className="pb-1 text-center font-semibold text-2xl">{children}</h1>
+      <table className="table-auto ">
+        <thead className="pb-12">
+          <tr className="w-max text-sm">
+            <th scope="col" className="pl-1">
+              Denomination
+            </th>
+            {!isRegister && (
+              <th scope="col" className="px-3">
+                Amount
+              </th>
+            )}
+            <th scope="col" className="px-3">
+              Total
+            </th>
+            {isRegister && (
+              <>
+                <th scope="col" className="px-5">
+                  In Register
+                </th>
+                <th scope="col" className="pl-1">
+                  Out of Register
+                </th>
+              </>
+            )}
+          </tr>
+        </thead>
+        <tbody className="text-center">
+          <tr>
+            <TableItem type={"head"}>$0.25</TableItem>
+            {isRegister && (
+              <>
+                <TableItem>${input.quarter.toFixed(2)}</TableItem>
+                <TableItem>${register.quarter.toFixed(2)}</TableItem>
+              </>
+            )}
+            {!isRegister && <TableItem>{cashout.quarter * 4}</TableItem>}
+            <TableItem>${cashout.quarter.toFixed(2)}</TableItem>
+          </tr>
+          <tr>
+            <TableItem type={"head"}>$1</TableItem>
+            {isRegister && (
+              <>
+                <TableItem>${input.loonie}</TableItem>
+                <TableItem>${register.loonie}</TableItem>
+              </>
+            )}
+            {!isRegister && <TableItem>{cashout.loonie}</TableItem>}
+
+            <TableItem>${cashout.loonie}</TableItem>
+          </tr>
+          <tr>
+            <TableItem type={"head"}>$2</TableItem>
+            {isRegister && (
+              <>
+                <TableItem>${input.toonie}</TableItem>
+                <TableItem>${register.toonie}</TableItem>
+              </>
+            )}
+            {!isRegister && <TableItem>{cashout.toonie / 2}</TableItem>}
+
+            <TableItem>${cashout.toonie}</TableItem>
+          </tr>
+          <tr>
+            <TableItem type={"head"}>$5</TableItem>
+            {isRegister && (
+              <>
+                <TableItem>${input.five}</TableItem>
+                <TableItem>${register.five}</TableItem>
+              </>
+            )}
+            {!isRegister && <TableItem>{cashout.five / 5}</TableItem>}
+
+            <TableItem>${cashout.five}</TableItem>
+          </tr>
+          <tr>
+            <TableItem type={"head"}>$10</TableItem>
+            {isRegister && (
+              <>
+                <TableItem>${input.ten}</TableItem>
+                <TableItem>${register.ten}</TableItem>
+              </>
+            )}
+            {!isRegister && <TableItem>{cashout.ten / 10}</TableItem>}
+
+            <TableItem>${cashout.ten}</TableItem>
+          </tr>
+          <tr>
+            <TableItem type={"head"}>$20</TableItem>
+            {isRegister && (
+              <>
+                <TableItem>${input.twenty}</TableItem>
+                <TableItem>${register.twenty}</TableItem>
+              </>
+            )}
+            {!isRegister && <TableItem>{cashout.twenty / 20}</TableItem>}
+
+            <TableItem>${cashout.twenty}</TableItem>
+          </tr>
+          <tr>
+            <TableItem type={"head"}>$50</TableItem>
+            {isRegister && (
+              <>
+                <TableItem>${input.fifty}</TableItem>
+                <TableItem>${register.fifty}</TableItem>
+              </>
+            )}
+            {!isRegister && <TableItem>{cashout.fifty / 50}</TableItem>}
+
+            <TableItem>${cashout.fifty}</TableItem>
+          </tr>
+          <tr>
+            <TableItem type={"head"}>$100</TableItem>
+            {isRegister && (
+              <>
+                <TableItem>${input.hundred}</TableItem>
+                <TableItem>${register.hundred}</TableItem>
+              </>
+            )}
+            {!isRegister && <TableItem>{cashout.hundred / 100}</TableItem>}
+
+            <TableItem>${cashout.hundred}</TableItem>
+          </tr>
+        </tbody>
+        <tfoot className="text-center">
+          <tr>
+            <TableItem type="head" className="border-t border-gray-700">
+              Total
+            </TableItem>
+            {isRegister && (
+              <>
+                <TableItem className="border-t border-gray-700">
+                  ${sum(input).toFixed(2)}
+                </TableItem>
+                <TableItem className="border-t border-gray-700">
+                  ${sum(register).toFixed(2)}
+                </TableItem>
+              </>
+            )}
+
+            {!isRegister && <TableItem></TableItem>}
+
+            <TableItem className="border-t border-gray-700">
+              ${sum(cashout).toFixed(2)}
+            </TableItem>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
   );
 }

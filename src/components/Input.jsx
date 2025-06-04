@@ -4,7 +4,7 @@ export default function Input({ children, amount, handleInput, actions }) {
   // Children is the denomination (eg. 100, 20, 5) and not the amount (eg. 12, 15, etc.)
   // Every time value changes, it computes the amount and refreshes (i think, it works so)
   return (
-    <div className="flex justify-around w-72 space-x-5 p-3 mb-2 border-2 border-black rounded-xl">
+    <div className="flex justify-around min-w-72 h-min space-x-5 p-2 border-2 border-black rounded-xl">
       <p className="self-center">{children}</p>
       <div className="space-x-1 self-center">
         <InputButton action={() => actions.increment(children)}>+</InputButton>

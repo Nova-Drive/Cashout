@@ -10,16 +10,41 @@ export const RegisterContext = createContext(null);
 export const RegisterDispachContext = createContext(null);
 
 export function RegisterProvider() {
-  const [registers, dispach] = useReducer(registerReducer, initialRegisters);
-  const [cashoutList, setCashoutList] = useState([]);
+  const [registers, dispach] = useReducer(registerReducer, []);
+  const [cashout, setCashout] = useState(initialCashout);
 
-  function createCashout() {
-    console.log("Creating Cashout");
-    let list = [];
-    registers.forEach((reg) => {
-      list.push(calculateCashout(reg.cash, null, reg.float));
+  // console.log("Cashout:");
+  // console.log(cashout);
+
+  // console.log("Registers:");
+  // console.log(registers);
+
+  function sumCashouts() {
+    setCashout(() => {
+      console.log("Creating Cashout");
+      let list = [];
+      let cash = Object.assign({}, initialCashout.cash);
+      let template = Object.assign({}, initialCashout);
+      registers.forEach((reg) => {
+        const result = calculateCashout(reg.cash, null, reg.float);
+        template.total = result.cashoutTotal + template.total;
+
+        Object.keys(reg.cash).forEach((key) => {
+          cash[key] = cash[key] + result.cashout[key];
+          console.log(key + ": " + cash[key]);
+        });
+        list.push(result);
+      });
+
+      //template.total = Object.values(template.cash).reduce((a, b) => a + b, 0);
+      template.cashoutList = Object.assign([], list);
+      template.cash = Object.assign({}, cash);
+
+      // console.log("Printing Template:");
+      // console.log(template);
+
+      return template;
     });
-    setCashoutList(list);
   }
 
   function addRegister() {
@@ -43,7 +68,7 @@ export function RegisterProvider() {
   }
 
   function resetRegisters() {
-    setCashoutList([]);
+    setCashout(() => initialCashout);
     dispach({
       type: "resetAllRegisters",
     });
@@ -248,10 +273,9 @@ export function RegisterProvider() {
         );
       }
       case "resetAllRegisters": {
-        //TODO: untested and also hacky
         console.log("Resetting all registers");
 
-        return [initialRegisters[0]];
+        return [];
       }
       default: {
         throw new Error("Unsupported");
@@ -265,37 +289,47 @@ export function RegisterProvider() {
         <div className="min-h-screen p-10 flex flex-col justify-center items-center">
           <Header>Cashout Calculator</Header>
           {registers.map((register, index) => (
-            <Register order={index} />
+            <Register order={index} key={register.id} />
           ))}
           <div className="flex mt-3 space-x-1">
             <InputButton action={addRegister}>Add Register</InputButton>
-            <InputButton action={createCashout}>Calculate</InputButton>
+            <InputButton action={sumCashouts}>Calculate</InputButton>
             <InputButton action={resetRegisters}>Reset</InputButton>
           </div>
-          {cashoutList.length > 0 &&
-            cashoutList.map((item, index) => (
-              <>
-                <Header>Register {index + 1}</Header>
+          {cashout.cashoutList.length > 0 && (
+            <div className="py-3 flex space-x-20 ">
+              <div className="grid grid-cols-2 items-center">
+                {cashout.cashoutList.map((item, index) => (
+                  <div key={item.id} className="px-1.5 pb-1.5">
+                    {/* <Header>Register {index + 1}</Header>
                 <div className="space-x-2 mb-10 flex">
-                  <ResultSquare value={cashoutList[index].inputTotal}>
+                  <ResultSquare value={item.inputTotal}>
                     Before Cashout
                   </ResultSquare>
 
-                  <ResultSquare value={cashoutList[index].cashoutTotal}>
+                  <ResultSquare value={item.cashoutTotal}>
                     Cashout Total
                   </ResultSquare>
 
-                  <ResultSquare value={registers[index].float}>
+                  <ResultSquare value={item.inputTotal - item.cashoutTotal}>
                     Left in Register
                   </ResultSquare>
-                </div>
-                <Table
-                  input={registers[index].cash}
-                  register={cashoutList[index].register}
-                  cashout={cashoutList[index].cashout}
-                />
-              </>
-            ))}
+                </div> */}
+                    <Table
+                      input={registers[index].cash}
+                      register={item.register}
+                      cashout={item.cashout}
+                    >
+                      Register {index + 1}
+                    </Table>
+                  </div>
+                ))}
+              </div>
+              <Table cashout={cashout.cash} isRegister={false}>
+                Final
+              </Table>
+            </div>
+          )}
         </div>
       </RegisterDispachContext>
     </RegisterContext.Provider>
@@ -319,3 +353,18 @@ const initialRegisters = [
     float: Number(0),
   },
 ];
+
+const initialCashout = {
+  cashoutList: Array(),
+  cash: {
+    quarter: Number(0),
+    loonie: Number(0),
+    toonie: Number(0),
+    five: Number(0),
+    ten: Number(0),
+    twenty: Number(0),
+    fifty: Number(0),
+    hundred: Number(0),
+  },
+  total: Number(0),
+};

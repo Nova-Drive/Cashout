@@ -53,7 +53,7 @@ export default function Register({ order }) {
   return (
     <div className="p-5 mt-5 flex flex-col justify-center bg-cyan-500 border-4 border-black rounded-2xl ">
       <Header>Register {order + 1}</Header>
-      <div className="grid grid-cols-2 w-2xl justify-items-center auto-cols-max">
+      <div className="grid grid-cols-2 space-x-4 space-y-3 justify-items-center">
         <Input
           amount={register.cash.quarter}
           handleInput={handleSetInput}
@@ -112,9 +112,9 @@ export default function Register({ order }) {
         </Input>
       </div>
 
-      <div className="flex justify-evenly items-center">
+      <div className="flex justify-between items-center">
         <Float amount={register.float} setAmount={handleSetFloat} />
-        <div className="flex space-x-10">
+        <div className="flex space-x-10 w- items-center">
           <InputButton
             style="flex justify-center h-min mt-2"
             action={handleReset}
