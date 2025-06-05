@@ -287,7 +287,7 @@ export function RegisterProvider() {
     <RegisterContext.Provider value={registers}>
       <RegisterDispachContext value={dispach}>
         <div className="min-h-screen p-10 flex flex-col justify-center items-center">
-          <Header>Cashout Calculator</Header>
+          <Header style={"pb-4 text-4xl"}>Cashout Calculator</Header>
           {registers.map((register, index) => (
             <Register order={index} key={register.id} />
           ))}

@@ -1,7 +1,4 @@
-export default function Header({ children }) {
-  return (
-    <h1 className="text-stone-600 font-bold text-4xl justify-items-center">
-      {children}
-    </h1>
-  );
+export default function Header({ style = "", children }) {
+  let cname = style + " text-black font-bold";
+  return <h1 className={cname}>{children}</h1>;
 }
