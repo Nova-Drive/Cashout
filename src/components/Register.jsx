@@ -10,6 +10,8 @@ export default function Register({ order }) {
   const register = registerContext[order];
   const dispach = useContext(RegisterDispachContext);
 
+  let name = register.name ? register.name : "Register " + order;
+
   const incrementDecrement = {
     increment: (type) =>
       dispach({
@@ -43,6 +45,14 @@ export default function Register({ order }) {
     });
   }
 
+  function handleSetName(name) {
+    dispach({
+      type: "setName",
+      index: order,
+      name: name,
+    });
+  }
+
   function handleReset() {
     dispach({
       type: "resetRegister",
@@ -52,7 +62,12 @@ export default function Register({ order }) {
 
   return (
     <div className="p-5 mt-5 flex flex-col max-w-2xl bg-cyan-500 border-4 border-black rounded-2xl ">
-      <Header style={"pb-2 text-2xl self-center"}>Register {order + 1}</Header>
+      {/* <Header style={"pb-2 text-2xl self-center"}>{name}</Header> */}
+      <input
+        className="pb-3 text-4xl self-center w-44 text-center text-black font-bold"
+        defaultValue={name}
+        onChange={(e) => handleSetName(e.target.value)}
+      ></input>
       <div className="flex flex-wrap space-y-3 self-center justify-around">
         <Input
           amount={register.cash.quarter}

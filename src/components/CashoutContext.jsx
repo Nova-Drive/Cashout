@@ -26,12 +26,13 @@ export function RegisterProvider() {
       let cash = Object.assign({}, initialCashout.cash);
       let template = Object.assign({}, initialCashout);
       registers.forEach((reg) => {
-        const result = calculateCashout(reg.cash, null, reg.float);
+        let result = calculateCashout(reg.cash, null, reg.float);
+        result["name"] = reg.name;
         template.total = result.cashoutTotal + template.total;
 
         Object.keys(reg.cash).forEach((key) => {
           cash[key] = cash[key] + result.cashout[key];
-          console.log(key + ": " + cash[key]);
+          //console.log(key + ": " + cash[key]);
         });
         list.push(result);
       });
@@ -52,6 +53,7 @@ export function RegisterProvider() {
       type: "added",
       register: {
         id: nextId++,
+        name: "",
         cash: {
           quarter: Number(0),
           loonie: Number(0),
@@ -264,6 +266,12 @@ export function RegisterProvider() {
         reg.float = action.float;
         return registers.map((r, i) => (i != action.index ? r : reg));
       }
+      case "setName": {
+        console.log("Set name of register to " + action.name);
+        let reg = { ...registers[action.index] };
+        reg.name = action.name;
+        return registers.map((r, i) => (i != action.index ? r : reg));
+      }
 
       case "resetRegister": {
         // index
@@ -320,7 +328,7 @@ export function RegisterProvider() {
                       register={item.register}
                       cashout={item.cashout}
                     >
-                      Register {index + 1}
+                      {registers[index].name}
                     </Table>
                   </div>
                 ))}
@@ -340,6 +348,7 @@ let nextId = 2;
 const initialRegisters = [
   {
     id: 1,
+    name: "Register 1",
     cash: {
       quarter: Number(0),
       loonie: Number(0),
